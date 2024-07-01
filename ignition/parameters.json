@@ -1,0 +1,7 @@
+{
+    "PendleERC20": {
+      "name": "Pendle Token",
+      "symbol": "PENDLE",
+      "decimal": 18
+    }
+  }

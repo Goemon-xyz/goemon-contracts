@@ -1,0 +1,58 @@
+# Variables
+SRC_DIR=contracts
+EXCLUDE_DIR=interfaces
+DEST_DIR=ignition/modules
+GO_FILE=process_files.go
+GO_BINARY=process_files
+
+.PHONY: all build run clean deploy
+
+# Default target
+all: build run clean
+
+# Build the Go program
+build:
+	@echo "Building the Go program..."
+	go build -o $(GO_BINARY) $(GO_FILE)
+
+# Run the Go program
+run:
+	@echo "Empty destination folder..."
+	rm -rf $(DEST_DIR)/*
+
+	@echo "Running the Go program..."
+	./$(GO_BINARY) -src=$(SRC_DIR) -exclude=$(EXCLUDE_DIR) -destination=$(DEST_DIR)
+
+# Clean the binary
+clean:
+	@echo "Cleaning up..."
+	rm -f $(GO_BINARY)
+
+# Deploy using Hardhat Ignition
+deploy:
+	@echo "Starting local Hardhat node..."
+	@npx hardhat node > hardhat.log 2>&1 & \
+	PID=$$$$; \
+	until grep -q "Started HTTP and WebSocket JSON-RPC server at" hardhat.log; do \
+		if ! kill -0 $$PID 2>/dev/null; then \
+			echo "Hardhat node failed to start. Check hardhat.log for details."; \
+			exit 1; \
+		fi; \
+		sleep 1; \
+	done; \
+	echo "Hardhat node is ready."
+
+	@echo "Deploying contracts and libraries..."
+	COUNT=0; \
+	for file in $$(find $(DEST_DIR) -name "*.ts"); do \
+		echo "Deploying $$file..."; \
+		if npx hardhat ignition deploy $$file --network localhost; then \
+			COUNT=$$((COUNT+1)); \
+		fi; \
+	done; \
+	echo "Total files successfully deployed: $$COUNT"
+
+	@echo "Stopping Hardhat node..." \
+	kill $$PID; \
+	wait $$PID 2>/dev/null || true; \
+	rm -f hardhat.log
