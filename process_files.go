@@ -30,7 +30,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Total Solidity library files processed: %d\n", atomic.LoadInt32(&filesCount))
+	fmt.Printf("Total Solidity files processed: %d\n", atomic.LoadInt32(&filesCount))
 }
 
 // responsible for setting up and parsing command-line flags for the program
@@ -84,16 +84,17 @@ func processSolidityFile(path string, config Config) error {
 
 	// checks if the file is a solidity library
 	if strings.Contains(string(content), "library ") {
-		libraryName, err := extractModuleName(string(content), "library")
-		if err != nil {
-			return fmt.Errorf("error extracting library name from %s: %w", path, err)
-		}
+		return nil 
+		// libraryName, err := extractModuleName(string(content), "library")
+		// if err != nil {
+		// 	return fmt.Errorf("error extracting library name from %s: %w", path, err)
+		// }
 
-		if err := createDeployModule(path, config, libraryName, "library"); err != nil {
-			return fmt.Errorf("error creating deploy files for %s: %w", path, err)
-		}
-		// increment files counter
-		atomic.AddInt32(&filesCount, 1)
+		// if err := createDeployModule(path, config, libraryName, "library"); err != nil {
+		// 	return fmt.Errorf("error creating deploy files for %s: %w", path, err)
+		// }
+		// // increment files counter
+		// atomic.AddInt32(&filesCount, 1)
 	}
 
 	// checks if the file is a solidity contract
