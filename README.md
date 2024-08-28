@@ -1,13 +1,23 @@
-# Sample Hardhat Project
+# Pendle Hardhat Ignition
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+This project is designed to demonstrate the integration of Pendle yield tokens with a basic Hardhat setup. It includes a sample contract, corresponding tests, and a Hardhat Ignition module for deploying the contract.
 
-Try running some of the following tasks:
+## Getting Started
 
-```shell
+To begin working with this project, you'll need to have Node.js and npm installed on your machine. Once you have those, install the necessary dependencies by running:
+
+```bash
+npm install
+```
+
+```
 npx hardhat help
-npx hardhat test
+```
+
+```
 REPORT_GAS=true npx hardhat test
-npx hardhat node
+```
+
+```
 npx hardhat ignition deploy ./ignition/modules/Lock.ts
 ```
